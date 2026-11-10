@@ -71,5 +71,6 @@ public class Demo {
         pennsylvania.addNode(J);
 
         pennsylvania.printGraph();
+        pennsylvania.prims();
     }
 }
