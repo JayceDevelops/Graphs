@@ -1,4 +1,6 @@
 import java.util.LinkedList;
+import java.util.Scanner;
+import java.util.Stack;
 
 public class Graph {
     
@@ -58,6 +60,124 @@ public class Graph {
         
         // report total weight
         System.out.println("Prim's complete. Total mst cost: " + mst_weight);
+    }
+
+    /*
+        Dijkstras algo
+    */
+
+    public void dijkstras(Node start, Node end){
+
+        // Reset all dijkstras properties 
+        unvisitAllNodes();
+        resetDistance();
+        resetPrev();
+
+        Node curr = start;
+        curr.distance = 0;
+        
+        Scanner keyboard = new Scanner(System.in);
+
+        while (curr != null){
+            if (DEBUG) print("Current node is " + curr + " distance = " + curr.distance);
+
+            if (curr == end){
+                break;
+            }
+
+            // Pick edges 1 by 1 
+            for (Edge edge : curr.edges){
+                if (DEBUG) print("\tEdge " + edge + " visited? " + edge.end.visited);
+
+                if (edge.end.visited){
+                    if (DEBUG) print("\t\tskip...");
+                    continue;
+                }
+
+                int newDistance = curr.distance + edge.weight;
+                if (DEBUG) print("\t\tNew Distance: " + newDistance + " (" + curr.distance + " + " + edge.weight + ")");
+
+                if (newDistance < edge.end.distance){
+                    if (DEBUG) print("\t\tNew distance is smaller. updating..");
+                    edge.end.distance = newDistance;
+                    edge.end.prev = curr;
+                }
+            }
+
+            curr.visited = true;
+
+            //TODO: printout table
+            if (DEBUG) printDijkstrasTable();
+
+            if (DEBUG) keyboard.nextLine();
+
+            curr = getSmallestNode();
+        }
+
+        Stack<Node> path = new Stack<>();
+        curr = end;
+
+        while (curr != null){
+            path.push(curr);
+            curr = curr.prev;
+        }
+
+        print("Shortest Path from " + start + " to " + end);
+        while (!path.isEmpty()){
+            curr = path.pop();
+            print("Go to " + curr);
+        }
+        
+
+        keyboard.close();
+    }
+
+    private void printDijkstrasTable(){
+        System.out.println();
+        System.out.printf("%-10s%-10s%-15s%-10s \n", "NAME", "VISITED", "DIST", "PREV");
+        for (int i =0; i < nodes.size(); i++){
+            System.out.printf("%-10s", nodes.get(i).name);
+            System.out.printf("%-10s", nodes.get(i).visited);
+            System.out.printf("%-15s", nodes.get(i).distance);
+            System.out.printf("%-10s\n", nodes.get(i).prev);
+        }
+        System.out.println();
+    }
+
+    private Node getSmallestNode(){
+        int min = Integer.MAX_VALUE;
+
+        Node candidate = null;
+
+        for (Node n : nodes){
+            if (n.visited){
+                continue;
+            }
+
+            if (n.distance < min){
+                min = n.distance;
+                candidate = n;
+            }
+        }
+
+        return candidate;
+    }
+
+    private void print(String s){
+        System.out.println(s);
+    }
+
+    private void resetPrev(){
+        for (Node n : nodes){
+            n.prev = null;
+        }
+    }
+
+    // Set all nodes distance to as high as possible 
+    private void resetDistance(){
+        for (Node n : nodes){
+            n.distance = Integer.MAX_VALUE;
+        }
     }
 
     /*

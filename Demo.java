@@ -1,76 +1,67 @@
-public class Demo {
-    public static void main(String[] args) {
-        // Create nodes
-        String cities = "EWOAPHIJ";
-        Graph pennsylvania = new Graph();
+public class Demo{
+    public static void main(String[] args){
+       
+        Graph graph = new Graph();
 
-        //for (int i = 0; i < cities.length(); i++){
-            //char city = cities.charAt(i);
+        //nodes/vertices
+        Node a = new Node("A");
+        Node b = new Node("B");
+        Node c = new Node("C");
+        Node d = new Node("D");
+        Node e = new Node("E");
+        Node f = new Node("F");
+        Node g = new Node("G");
 
-            //Node c = new Node(city+""); // Cast
-            //pennsylvania.addNode(c);
-        //}
+        graph.addNode(a);
+        graph.addNode(b);
+        graph.addNode(c);
+        graph.addNode(d);
+        graph.addNode(e);
+        graph.addNode(f);
+        graph.addNode(g);
 
-        // Nodes 
-        Node W = new Node("W");
-        Node E = new Node("E");
-        Node O = new Node("O");
-        Node A = new Node("A");
-        Node P = new Node("P");
-        Node H = new Node("H");
-        Node I = new Node("I");
-        Node J = new Node("J");
-
-        // Edges
-
-        // All outgoing edges
-
-        // W
-        pennsylvania.addEdge(W, O, 21);
-        pennsylvania.addEdge(W, H, 20);
-        pennsylvania.addEdge(W, J, 22);
-        pennsylvania.addEdge(W, E, 40);
-
-        // O
-        pennsylvania.addEdge(O, W, 21);
-        pennsylvania.addEdge(O, A, 16);
-
-        // A
-        pennsylvania.addEdge(A, O, 16);
-        pennsylvania.addEdge(A, P, 18);
-
-        // P
-        pennsylvania.addEdge(P, A, 18);
-        pennsylvania.addEdge(P, H, 21);
-
-        // H
-        pennsylvania.addEdge(H, P, 21);
-        pennsylvania.addEdge(H, W, 20);
-        pennsylvania.addEdge(H, I, 41);
-
-        // I
-        pennsylvania.addEdge(I, H, 41);
-        pennsylvania.addEdge(I, J, 10);
-        pennsylvania.addEdge(I, E, 35);
-
-        // J
-        pennsylvania.addEdge(J, W, 22);
-        pennsylvania.addEdge(J, I, 10);
-
-        // E
-        pennsylvania.addEdge(E, W, 40);
-        pennsylvania.addEdge(E, I, 35);
-
-        pennsylvania.addNode(E);
-        pennsylvania.addNode(W);
-        pennsylvania.addNode(O);
-        pennsylvania.addNode(A);
-        pennsylvania.addNode(P);
-        pennsylvania.addNode(H);
-        pennsylvania.addNode(I);
-        pennsylvania.addNode(J);
-
-        pennsylvania.printGraph();
-        pennsylvania.prims();
+        //edges
+        graph.addEdge(a, b, 2);
+        graph.addEdge(a, c, 3);
+        graph.addEdge(a, d, 3);
+       
+        graph.addEdge(b, a, 2);
+        graph.addEdge(b, c, 4);
+        graph.addEdge(b, e, 3);
+       
+        graph.addEdge(c, a, 3);
+        graph.addEdge(c, b, 4);
+        graph.addEdge(c, e, 1);
+        graph.addEdge(c, d, 5);
+        graph.addEdge(c, f, 6);
+       
+        graph.addEdge(d, a, 3);
+        graph.addEdge(d, c, 5);
+        graph.addEdge(d, f, 7);
+       
+        graph.addEdge(e, b, 3);
+        graph.addEdge(e, c, 1);
+        graph.addEdge(e, f, 8);
+       
+        graph.addEdge(f, d, 7);
+        graph.addEdge(f, c, 6);
+        graph.addEdge(f, e, 8);
+        graph.addEdge(f, g, 9);
+       
+        graph.addEdge(g, f, 9);
+       
+        graph.printGraph();
+       
+        graph.prims();
+       
+        graph.dijkstras(a, g);
+       
+        //graph.saveDotFormat();
+       
     }
+
+    //TODO: Prim or Kruskal MST?
+    //TODO: DFS
+    //TODO: BFS
+    //TODO: Dijkstra
 }
