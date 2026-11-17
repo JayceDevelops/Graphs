@@ -132,6 +132,123 @@ public class Graph {
         keyboard.close();
     }
 
+    public void aStar(Node start, Node end) {
+        
+        // Get rid of node data
+        unvisitAllNodes();
+        resetDistance();
+        resetPrev();
+        resetAStar();
+        
+        // Two lists
+        LinkedList<Node> open = new LinkedList<>();
+        LinkedList<Node> closed = new LinkedList<>();
+
+        Node curr = start;
+        curr.h = manhattanDistance(curr, end);
+        curr.f = curr.distance + curr.h;
+
+        boolean done = false;
+
+        Scanner keyboard = new Scanner(System.in);
+
+        while (!done){
+            if (DEBUG) print("Current node is " + curr);
+
+            for (Edge edge : curr.edges){
+                if (DEBUG) print("\tExamining edge " + edge);
+
+                Node dest = edge.end;
+                
+                if (!open.contains(dest) && !closed.contains(dest)){
+                    if (DEBUG) print("\t\t" + dest + " not in either list, added to open");
+                    open.add(dest);
+                }
+
+                int g = curr.distance + edge.weight;
+                int h = manhattanDistance(dest, end);
+                int f = g + h;
+
+                if (DEBUG) print("\t\tg=" + g + ", h=" + h + ", f=" + f);
+                if (DEBUG) print("\t\tComparing " + dest + " f value of " + dest.f + " to new f of " + f);
+
+                if (f < dest.f){
+                    dest.distance = g;
+                    dest.h = h;
+                    dest.f = f;
+                    dest.prev = curr;
+                    if (DEBUG) print("\t\t\tSmaller f found. Updating... " + dest + "; g="+g+", h=" + h+ ", f=" + f);
+                }
+
+                // end? 
+                if (dest == end){
+                    done = true;
+                    break;
+                }
+            } // End for each edge
+
+            printAStarTable();
+            if (DEBUG) print("open: " + open + "\n" + "closed: " + closed);
+
+            keyboard.nextLine();
+
+            closed.add(curr);
+            curr = getNodeWithLowestF(open);
+            
+        } // end while not done 
+
+        Stack<Node> path = new Stack<>();
+        curr = end;
+
+        while (curr != null){
+            path.push(curr);
+            curr = curr.prev;
+        }
+
+        print("Shortest Path from " + start + " to " + end);
+        while (!path.isEmpty()){
+            curr = path.pop();
+            print("Go to " + curr);
+        }
+
+        keyboard.close();
+    }
+
+    private Node getNodeWithLowestF(LinkedList<Node> list){
+        Node candidate = null;
+        int min = Integer.MAX_VALUE;
+
+        for (Node n : list){
+            if (n.f < min){
+                candidate = n;
+                min = n.f;
+            }
+        }
+
+        list.remove(candidate);
+        return candidate;
+    }
+
+    private int manhattanDistance(Node node, Node goal){
+        int dx = Math.abs(node.x - goal.x);
+        int dy = Math.abs(node.y - goal.y);
+        
+        return dx + dy;
+    }
+
+    private void printAStarTable(){
+        System.out.println();
+        System.out.printf("%-15s%-15s%-15s%-15s%-15s \n", "NAME", "G", "H", "F", "PREV");
+        for (int i =0; i < nodes.size(); i++){
+            System.out.printf("%-15s", nodes.get(i).name);
+            System.out.printf("%-15s", nodes.get(i).distance);
+            System.out.printf("%-15s", nodes.get(i).h);
+            System.out.printf("%-15s", nodes.get(i).f);
+            System.out.printf("%-15s\n", nodes.get(i).prev);
+        }
+        System.out.println();
+    }
+
     private void printDijkstrasTable(){
         System.out.println();
         System.out.printf("%-10s%-10s%-15s%-10s \n", "NAME", "VISITED", "DIST", "PREV");
@@ -170,6 +287,14 @@ public class Graph {
     private void resetPrev(){
         for (Node n : nodes){
             n.prev = null;
+        }
+    }
+
+    private void resetAStar(){
+        for (Node n : nodes){
+            n.distance = 0;
+            n.f = Integer.MAX_VALUE;
+            n.h = 0;
         }
     }
 

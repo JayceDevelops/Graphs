@@ -9,8 +9,12 @@ public class Node {
     public boolean visited;
 
     // dijkstras
-    public int distance;
+    public int distance; // G value
     public Node prev;
+
+    // A*
+    public int x, y, h, f;
+
 
     public Node(String name){
         this.name = name;
@@ -18,6 +22,8 @@ public class Node {
         this.visited = false;
         this.distance = 0;
         this.prev = null;
+        x = y = h = f = 0;
+
     }
 
     @Override 
